@@ -1,0 +1,15 @@
+{
+  "name": "portfolio-file-server",
+  "version": "1.0.0",
+  "description": "File writing server for portfolio editor",
+  "main": "save-portfolio-data.js",
+  "scripts": {
+    "start": "node save-portfolio-data.js",
+    "dev": "node save-portfolio-data.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2"
+  }
+}
