@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo, useCallback, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 import { 
@@ -11,24 +11,157 @@ import {
   Shield
 } from 'lucide-react'
 
-// Company logo component
-const CompanyLogo = ({ src, alt, size = 16, className = "" }) => (
+// Company logo component with loading optimization
+const CompanyLogo = memo(({ src, alt, size = 16, className = "" }) => (
   <img 
     src={src} 
     alt={alt} 
     width={size} 
     height={size} 
     className={`${className} object-contain`}
-    style={{ width: size, height: size }}
+    style={{ 
+      width: size, 
+      height: size,
+      filter: 'drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1))'
+    }}
+    loading="lazy"
+    decoding="async"
   />
-)
+))
+
+// Individual Certification Card Component - Memoized for performance
+const CertificationCard = memo(({ cert, index }) => {
+  const [cardRef, cardInView] = useInView({ 
+    threshold: 0.2, 
+    triggerOnce: true,
+    rootMargin: '50px 0px' // Start animation earlier
+  })
+
+  return (
+    <motion.div
+      ref={cardRef}
+      key={cert.credentialId}
+      initial={{ 
+        opacity: 0, 
+        y: 40,
+        scale: 0.95
+      }}
+      animate={cardInView ? { 
+        opacity: 1, 
+        y: 0,
+        scale: 1
+      } : {
+        opacity: 0, 
+        y: 40,
+        scale: 0.95
+      }}
+      transition={{ 
+        duration: 0.4,
+        delay: index * 0.08,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }}
+      whileHover={{ 
+        scale: 1.02, 
+        y: -4,
+        transition: { 
+          duration: 0.2,
+          ease: "easeOut"
+        }
+      }}
+      className="group relative cursor-pointer rounded-3xl p-8 bg-white/90 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-200 border border-slate-200/50"
+    >
+      {/* Enhanced background effects for individual cards */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/3 to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-3xl" />
+      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-white/10 to-transparent rounded-full transform translate-x-20 -translate-y-20" />
+      
+      <div className="relative z-10">
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <motion.div 
+              className="relative"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="p-4 rounded-2xl bg-white shadow-lg border border-slate-200">
+                <CompanyLogo src={cert.logoUrl} alt={cert.issuer} size={48} />
+              </div>
+            </motion.div>
+          </div>
+          
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center gap-3 mb-2">
+                  <h4 className="font-bold text-slate-900 text-xl lg:text-2xl leading-tight group-hover:text-blue-600 transition-colors duration-200">
+                    {cert.name}
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {cert.skills.map((skill, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-lg border border-slate-200"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-3 mb-3">
+                  <span 
+                    className={`text-sm font-bold px-4 py-2 rounded-xl bg-gradient-to-r ${cert.color} text-white shadow-md`}
+                  >
+                    {cert.issuer}
+                  </span>
+                  <div className="flex items-center gap-2 text-slate-500 font-semibold">
+                    <div className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
+                    <span>{cert.date}</span>
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                    <span className="text-green-600">Verified</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Verify Button and Credential ID - Stacked */}
+              <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                <a
+                  href={cert.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold bg-gradient-to-r ${cert.color} text-white hover:shadow-lg transition-all duration-200 group/btn`}
+                >
+                  <span>Verify</span>
+                  <ExternalLink size={16} className="group-hover/btn:translate-x-0.5 transition-transform duration-200" />
+                </a>
+                
+                {/* Credential ID - Below Verify Button */}
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full" />
+                  <span className="text-xs text-slate-400 font-mono font-bold">
+                    ID: {cert.credentialId}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Description */}
+            <p className="text-slate-600 text-sm leading-relaxed mb-3">
+              {cert.description}
+            </p>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
+})
 
 const Certifications = () => {
   const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: true })
   const [selectedCategory, setSelectedCategory] = useState('all')
-  const [hoveredCard, setHoveredCard] = useState(null)
 
-  const certifications = [
+  // Memoize certifications data to prevent unnecessary re-renders
+  const certifications = useMemo(() => [
     {
       name: 'Java Basics',
       issuer: 'HackerRank',
@@ -113,58 +246,62 @@ const Certifications = () => {
       color: 'from-blue-500 to-indigo-600',
       logoUrl: 'https://media.licdn.com/dms/image/v2/D560BAQEf_NHzN2yVQg/company-logo_100_100/company-logo_100_100/0/1723593046388/udemy_logo?e=1756339200&v=beta&t=yGQ2rf6Txa9gIwq9IofiZ0vpVeD_U1Lrflscinw-jnM'
     }
-  ]
+  ], [])
 
-  const categories = [
+  // Memoize categories to prevent recalculation
+  const categories = useMemo(() => [
     { id: 'all', label: 'All Certifications', icon: Award, count: certifications.length },
     { id: 'programming', label: 'Programming', icon: Zap, count: certifications.filter(c => c.category === 'programming').length },
     { id: 'cloud', label: 'Cloud & DevOps', icon: TrendingUp, count: certifications.filter(c => ['cloud', 'devops'].includes(c.category)).length },
     { id: 'architecture', label: 'Architecture', icon: Shield, count: certifications.filter(c => c.category === 'architecture').length },
     { id: 'monitoring', label: 'Monitoring', icon: Star, count: certifications.filter(c => c.category === 'monitoring').length }
-  ]
+  ], [certifications])
 
-  const filteredCertifications = selectedCategory === 'all' 
-    ? certifications 
-    : certifications.filter(cert => {
-        if (selectedCategory === 'cloud') return ['cloud', 'devops'].includes(cert.category)
-        return cert.category === selectedCategory
-      })
+  // Memoize filtered certifications to prevent unnecessary filtering
+  const filteredCertifications = useMemo(() => {
+    if (selectedCategory === 'all') return certifications
+    if (selectedCategory === 'cloud') return certifications.filter(cert => ['cloud', 'devops'].includes(cert.category))
+    return certifications.filter(cert => cert.category === selectedCategory)
+  }, [certifications, selectedCategory])
 
-  const containerVariants = {
+  // Memoize category change handler
+  const handleCategoryChange = useCallback((category) => {
+    setSelectedCategory(category)
+  }, [])
+
+  // Memoize animation variants to prevent recreation
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3,
-        delayChildren: 0.2,
+        staggerChildren: 0.1,
+        delayChildren: 0.1,
       },
     },
-  }
+  }), [])
 
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
+  const itemVariants = useMemo(() => ({
+    hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.6,
+        duration: 0.3,
         ease: 'easeOut',
       },
     },
-  }
+  }), [])
 
   return (
-    <section id="certifications" className="py-20 sm:py-24 lg:py-32 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden">
-      {/* Advanced Background Elements */}
+    <section 
+      id="certifications" 
+      className="py-20 sm:py-24 lg:py-32 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden"
+    >
+      {/* Optimized Background Elements - Reduced complexity */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-transparent rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 animate-pulse" />
+        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-transparent rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-gradient-to-tl from-indigo-500/8 via-cyan-500/4 to-transparent rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
-        <div className="absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-gradient-to-r from-purple-500/6 to-pink-500/6 rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2 animate-slow-spin" />
-        
-        {/* Floating geometric shapes */}
-        <div className="absolute top-20 left-20 w-4 h-4 bg-blue-400/20 rounded-full animate-bounce delay-1000" />
-        <div className="absolute top-40 right-32 w-6 h-6 bg-purple-400/20 rounded-lg rotate-45 animate-pulse delay-2000" />
-        <div className="absolute bottom-32 left-40 w-5 h-5 bg-indigo-400/20 rounded-full animate-bounce delay-3000" />
       </div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -179,8 +316,8 @@ const Certifications = () => {
             <div className="text-center mb-12 sm:mb-16">
               <motion.div 
                 className="inline-flex items-center gap-6 mb-8"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.2 }}
               >
                 <div className="relative">
                   <div className="p-5 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 rounded-3xl shadow-2xl">
@@ -201,7 +338,7 @@ const Certifications = () => {
                 className="text-slate-600 max-w-4xl mx-auto text-lg sm:text-xl leading-relaxed mb-10"
                 initial={{ opacity: 0, y: 20 }}
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
+                transition={{ delay: 0.1, duration: 0.3 }}
               >
                 Industry-recognized credentials showcasing mastery in cutting-edge technologies, 
                 cloud platforms, and modern development practices that drive innovation
@@ -211,7 +348,7 @@ const Certifications = () => {
                 className="flex items-center justify-center gap-3 mb-12"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
+                transition={{ delay: 0.2, duration: 0.3 }}
               >
                 <div className="w-16 h-1.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full" />
                 <div className="w-8 h-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full" />
@@ -223,21 +360,21 @@ const Certifications = () => {
                 className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-12"
                 initial={{ opacity: 0, y: 30 }}
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
+                transition={{ delay: 0.2, duration: 0.4 }}
               >
                 {categories.map((category) => {
                   const IconComponent = category.icon
                   return (
                     <motion.button
                       key={category.id}
-                      onClick={() => setSelectedCategory(category.id)}
+                      onClick={() => handleCategoryChange(category.id)}
                       className={`group relative px-6 py-3 rounded-2xl font-semibold text-sm transition-all duration-300 border-2 ${
                         selectedCategory === category.id
                           ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white border-transparent shadow-lg'
                           : 'bg-white/80 backdrop-blur-sm text-slate-700 border-slate-200 hover:border-blue-300 hover:bg-blue-50'
                       }`}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.02, y: -1 }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       <div className="flex items-center gap-2">
                         <IconComponent size={16} />
@@ -254,7 +391,7 @@ const Certifications = () => {
                         <motion.div
                           className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl -z-10"
                           layoutId="activeCategory"
-                          transition={{ duration: 0.3 }}
+                          transition={{ duration: 0.2 }}
                         />
                       )}
                     </motion.button>
@@ -263,181 +400,28 @@ const Certifications = () => {
               </motion.div>
             </div>
             
-            {/* All Certifications in Single Tile */}
+            {/* Individual Certification Tiles */}
             <AnimatePresence mode="wait">
               <motion.div 
                 key={selectedCategory}
                 className="max-w-6xl mx-auto"
                 initial={{ opacity: 0, y: 60, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -30, scale: 0.95 }}
+                exit={{ opacity: 0, y: -20, scale: 0.98 }}
                 transition={{ 
-                  duration: 0.6,
-                  type: "spring",
-                  stiffness: 120,
-                  damping: 20
+                  duration: 0.3,
+                  ease: "easeInOut"
                 }}
               >
-                <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 sm:p-12 shadow-2xl border border-slate-200/50 hover:shadow-3xl hover:border-blue-300/50 transition-all duration-700 relative overflow-visible">
-                  {/* Enhanced background effects */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/3 to-indigo-500/5 opacity-0 hover:opacity-100 transition-opacity duration-700" />
-                  <div className="absolute top-0 right-0 w-60 h-60 bg-gradient-to-br from-white/10 to-transparent rounded-full transform translate-x-30 -translate-y-30" />
-                  
-                  <div className="relative z-10">
-                    {/* Certifications List */}
-                    <div className="space-y-8 overflow-visible">
-                      {filteredCertifications.map((cert, index) => (
-                        <motion.div
-                          key={cert.credentialId}
-                          initial={{ 
-                            opacity: 0, 
-                            y: -120,
-                            scale: 0.7,
-                            rotateX: -25,
-                            rotateY: 10,
-                            z: -150,
-                            boxShadow: "0 0 0 0 rgba(0, 0, 0, 0)",
-                            filter: "blur(8px)"
-                          }}
-                          animate={{ 
-                            opacity: 1, 
-                            y: 0,
-                            scale: 1,
-                            rotateX: 0,
-                            rotateY: 0,
-                            z: 0,
-                            boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(148, 163, 184, 0.05), 0 0 10px rgba(59, 130, 246, 0.05)",
-                            filter: "blur(0px)"
-                          }}
-                          transition={{ 
-                            duration: 1.2,
-                            delay: index * 0.2,
-                            type: "spring",
-                            stiffness: 80,
-                            damping: 12,
-                            ease: [0.16, 1, 0.3, 1]
-                          }}
-                          whileHover={{ 
-                            scale: 1.06, 
-                            y: -12,
-                            boxShadow: "0 20px 40px -10px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(59, 130, 246, 0.3), 0 0 20px rgba(59, 130, 246, 0.1)",
-                            transition: { 
-                              duration: 0.15,
-                              type: "tween",
-                              ease: "easeOut"
-                            }
-                          }}
-                          className="group relative border-b border-slate-200 last:border-b-0 pb-8 last:pb-0 cursor-pointer rounded-2xl p-6 bg-white/80 backdrop-blur-sm shadow-md hover:bg-gradient-to-r hover:from-blue-50/70 hover:via-purple-50/50 hover:to-indigo-50/70 hover:border-blue-300/50 hover:shadow-lg transition-all duration-150 will-change-transform border border-slate-100"
-                          style={{ backfaceVisibility: "hidden" }}
-                        >
-                          {/* Animated Shadow Effect */}
-                          <motion.div
-                            className="absolute inset-0 rounded-2xl pointer-events-none"
-                            animate={{
-                              boxShadow: [
-                                "0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(148, 163, 184, 0.05), 0 0 10px rgba(59, 130, 246, 0.05)",
-                                "0 15px 35px -8px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(59, 130, 246, 0.1), 0 0 15px rgba(59, 130, 246, 0.08)",
-                                "0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(148, 163, 184, 0.05), 0 0 10px rgba(59, 130, 246, 0.05)"
-                              ]
-                            }}
-                            transition={{
-                              duration: 3,
-                              delay: (index * 0.2) + 1.5,
-                              repeat: Infinity,
-                              repeatType: "reverse",
-                              ease: "easeInOut"
-                            }}
-                          />
-                          
-                          <div className="flex flex-col lg:flex-row gap-6 items-start relative z-10">
-                            {/* Logo */}
-                            <div className="flex-shrink-0">
-                              <motion.div 
-                                className="relative"
-                                whileHover={{ scale: 1.1 }}
-                                transition={{ duration: 0.3 }}
-                              >
-                                <div className={`p-4 rounded-2xl bg-gradient-to-br ${cert.color} shadow-lg`}>
-                                  <CompanyLogo src={cert.logoUrl} alt={cert.issuer} size={48} />
-                                </div>
-                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-                                  <CheckCircle size={12} className="text-white" />
-                                </div>
-                              </motion.div>
-                            </div>
-                            
-                            {/* Content */}
-                            <div className="flex-1 min-w-0">
-                              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 mb-4">
-                                <div className="flex-1">
-                                  <div className="flex flex-wrap items-center gap-3 mb-2">
-                                    <h4 className="font-bold text-slate-900 text-xl lg:text-2xl leading-tight group-hover:text-blue-600 transition-colors duration-500">
-                                      {cert.name}
-                                    </h4>
-                                    <div className="flex flex-wrap gap-2">
-                                      {cert.skills.map((skill, idx) => (
-                                        <motion.span
-                                          key={idx}
-                                          className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-medium rounded-lg border border-slate-200 transition-colors duration-200"
-                                          initial={{ opacity: 0, scale: 0.8 }}
-                                          animate={{ opacity: 1, scale: 1 }}
-                                          transition={{ delay: idx * 0.05 }}
-                                        >
-                                          {skill}
-                                        </motion.span>
-                                      ))}
-                                    </div>
-                                  </div>
-                                  <div className="flex flex-wrap items-center gap-3 mb-3">
-                                    <motion.span 
-                                      className={`text-sm font-bold px-4 py-2 rounded-xl bg-gradient-to-r ${cert.color} text-white shadow-md`}
-                                      whileHover={{ scale: 1.05 }}
-                                    >
-                                      {cert.issuer}
-                                    </motion.span>
-                                    <div className="flex items-center gap-2 text-slate-500 font-semibold">
-                                      <div className="w-1.5 h-1.5 bg-slate-400 rounded-full" />
-                                      <span>{cert.date}</span>
-                                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                                      <span className="text-green-600">Verified</span>
-                                    </div>
-                                  </div>
-                                </div>
-                                
-                                {/* Verify Button and Credential ID - Stacked */}
-                                <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                                  <motion.a
-                                    href={cert.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold bg-gradient-to-r ${cert.color} text-white hover:shadow-lg transition-all duration-300 group/btn`}
-                                    whileHover={{ scale: 1.05, y: -2 }}
-                                    whileTap={{ scale: 0.95 }}
-                                  >
-                                    <span>Verify</span>
-                                    <ExternalLink size={16} className="group-hover/btn:translate-x-0.5 transition-transform duration-200" />
-                                  </motion.a>
-                                  
-                                  {/* Credential ID - Below Verify Button */}
-                                  <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                                    <span className="text-xs text-slate-400 font-mono font-bold">
-                                      ID: {cert.credentialId}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Description */}
-                              <p className="text-slate-600 text-sm leading-relaxed mb-3">
-                                {cert.description}
-                              </p>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
+                {/* Certifications Grid */}
+                <div className="grid gap-8 sm:gap-10 overflow-visible">
+                  {filteredCertifications.map((cert, index) => (
+                    <CertificationCard 
+                      key={cert.credentialId} 
+                      cert={cert} 
+                      index={index} 
+                    />
+                  ))}
                 </div>
               </motion.div>
             </AnimatePresence>
