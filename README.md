@@ -172,14 +172,6 @@ The portfolio uses **Framer Motion** for:
 - **Performant**: Optimized for 60fps across devices
 - **Accessible**: Respects user's motion preferences
 
-## 📈 Performance
-
-- **Lighthouse Score**: 95+ across all metrics
-- **Core Web Vitals**: Optimized for Google's performance standards
-- **Code Splitting**: Lazy loading for optimal bundle sizes
-- **Image Optimization**: Responsive images with proper formats
-- **Caching Strategy**: Efficient caching for repeat visits
-
 ## 🧪 Browser Support
 
 - **Chrome**: Latest (Recommended)
