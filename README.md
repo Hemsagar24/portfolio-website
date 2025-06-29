@@ -4,7 +4,7 @@ A modern, responsive portfolio website built with React, showcasing exceptional 
 
 ## 🎨 Design Philosophy
 
-This portfolio is crafted with a **UX-first approach**, focusing on.
+This portfolio is crafted with a **UX-first approach**, focusing on:
 
 - **Clarity & Information Hierarchy**: Clear visual hierarchy guiding users to important information
 - **Effortless Navigation**: Intuitive, consistent navigation with smooth scrolling
