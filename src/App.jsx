@@ -5,6 +5,7 @@ import About from './components/About'
 import Skills from './components/Skills'
 import Projects from './components/Projects'
 import Education from './components/Education'
+import Certifications from './components/Certifications'
 
 import { saveToLocalStorage, loadFromLocalStorage } from './utils/localStorage'
 
@@ -358,6 +359,9 @@ function App() {
 
       {/* Education Section */}
       <Education isAdminMode={isAdminMode} />
+
+      {/* Certifications Section */}
+      <Certifications />
 
       {/* Contact Section */}
       <section id="contact" className="py-12 sm:py-16 lg:py-20 xl:py-32 bg-gradient-to-br from-blue-50 via-white to-purple-50 relative">
