@@ -205,4 +205,4 @@ Software Development Engineer III
 ---
 
 *Built with ❤️ using React, Tailwind CSS, and Framer Motion*  
-*Last updated: June 2025*
+*Last updated: June 2026*
