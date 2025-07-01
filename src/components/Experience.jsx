@@ -453,154 +453,198 @@ const Experience = ({ experienceData = [], onUpdateExperience, showNotification,
               </motion.div>
             )}
 
-            {/* Experience Items */}
-            <div className="space-y-6 sm:space-y-8">
+            {/* Modern Experience Items */}
+            <div className="space-y-12 sm:space-y-16 lg:space-y-20">
               {experiences.map((exp, index) => (
                 <motion.div
                   key={exp.company}
                   variants={itemVariants}
                   className="relative"
                 >
-                  {/* Content Card - Full width simple layout */}
-                  <motion.div
-                    className="w-full max-w-6xl mx-auto"
-                    whileHover={{ y: -4 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div className="card-hover group relative">
+                  {/* Walmart Logo Outside - Left Side (Absolutely positioned) */}
+                  {exp.company?.toLowerCase().includes('walmart') && (
+                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 z-0 pl-16 sm:pl-24 lg:pl-32">
+                      <div
+                        className="w-[24rem] sm:w-[28rem] lg:w-[61rem] h-[36rem] sm:h-[42rem] lg:h-[54rem] bg-no-repeat bg-contain bg-center opacity-50"
+                        style={{
+                          backgroundImage: `url('/pngwing.com.png')`,
+                          transform: 'rotate(-90deg)',
+                          maskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)',
+                          WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)'
+                        }}
+                      />
+                    </div>
+                  )}
 
-                      {/* Header */}
-                      <div className="flex items-start justify-between mb-3 sm:mb-4">
-                        <div className="flex-1 min-w-0 pr-2">
-                          <h3 className="text-base sm:text-lg lg:text-xl font-bold text-neutral-900 mb-1 sm:mb-2 group-hover:text-primary-600 transition-colors">
-                            {exp.title}
-                          </h3>
-                          <h4 className={`text-sm sm:text-base font-semibold bg-gradient-to-r ${exp.color} bg-clip-text text-transparent mb-1 sm:mb-2`}>
+                  {/* Rakuten Logo Outside - Left Side (Absolutely positioned) */}
+                  {exp.company?.toLowerCase().includes('rakuten') && (
+                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 z-0 pl-16 sm:pl-24 lg:pl-32">
+                      <div
+                        className="w-[24rem] sm:w-[28rem] lg:w-[95rem] h-[36rem] sm:h-[42rem] lg:h-[54rem] bg-no-repeat bg-contain bg-center opacity-50"
+                        style={{
+                          backgroundImage: `url('/toppng.com-rakuten-logo-in-vector-free-download-512x512.png')`,
+                          transform: 'rotate(-90deg)',
+                          maskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)',
+                          WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)'
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {/* Ikyam Logo Outside - Left Side (Absolutely positioned) */}
+                  {exp.company?.toLowerCase().includes('ikyam') && (
+                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 z-0 pl-16 sm:pl-24 lg:pl-36">
+                      <div
+                        className="w-[24rem] sm:w-[28rem] lg:w-[35rem] h-[36rem] sm:h-[42rem] lg:h-[54rem] bg-no-repeat bg-contain bg-center opacity-50"
+                        style={{
+                          backgroundImage: `url('/Ikyam-Logo-PNG-1.png')`,
+                          transform: 'rotate(-90deg)',
+                          maskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)',
+                          WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)'
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {/* Modern Card Design */}
+                  <motion.div
+                    className="w-full max-w-5xl mx-auto relative z-10"
+                    whileHover={{ y: -4 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="group relative bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+
+                      
+                      {/* Header Section */}
+                      <div className="flex items-center justify-between mb-4 relative z-10">
+                        {/* Title and Company */}
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-3 mb-1">
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                              {exp.title}
+                            </h3>
+                            {exp.current && (
+                              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 border border-green-200">
+                                Current
+                              </span>
+                            )}
+                          </div>
+                          <h4 className={`text-lg font-semibold bg-gradient-to-r ${exp.color} bg-clip-text text-transparent`}>
                             {exp.company}
                           </h4>
                         </div>
-                        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-                          {exp.current && (
-                            <span className="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                              Current
-                            </span>
+                        
+                        {/* Company Logo */}
+                        <div className="flex items-center">
+                          {exp.company?.toLowerCase().includes('walmart') && (
+                            <div className="w-48 h-12 sm:w-64 sm:h-14 lg:w-80 lg:h-16 overflow-hidden rounded-lg flex items-center justify-center">
+                              <img 
+                                src="/pngwing.com.png" 
+                                alt="Walmart Logo"
+                                className="w-[75%] h-[75%] object-cover opacity-80 hover:opacity-100 transition-opacity"
+                              />
+                            </div>
                           )}
-                          {isAdminMode && (
-                            <div className="flex items-center gap-0.5 sm:gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button
-                                onClick={() => handleEditExperience(index)}
-                                className="p-1 sm:p-2 text-gray-400 hover:text-primary-600 transition-colors"
-                                title="Edit Experience"
-                              >
-                                <Edit3 size={14} className="sm:hidden" />
-                                <Edit3 size={16} className="hidden sm:block" />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteExperience(index)}
-                                className="p-1 sm:p-2 text-gray-400 hover:text-red-600 transition-colors"
-                                title="Delete Experience"
-                              >
-                                <Trash2 size={14} className="sm:hidden" />
-                                <Trash2 size={16} className="hidden sm:block" />
-                              </button>
+                          {exp.company?.toLowerCase().includes('rakuten') && (
+                            <div className="w-48 h-12 sm:w-64 sm:h-14 lg:w-80 lg:h-16 overflow-hidden rounded-lg flex items-center justify-center">
+                              <img 
+                                src="/toppng.com-rakuten-logo-in-vector-free-download-512x512.png" 
+                                alt="Rakuten Logo"
+                                className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                              />
+                            </div>
+                          )}
+                          {exp.company?.toLowerCase().includes('ikyam') && (
+                            <div className="w-48 h-12 sm:w-64 sm:h-14 lg:w-80 lg:h-16 overflow-hidden rounded-lg flex items-center justify-center">
+                              <img 
+                                src="/Ikyam-Logo-PNG-1.png" 
+                                alt="Ikyam Logo"
+                                className="w-[75%] h-[75%] object-cover opacity-80 hover:opacity-100 transition-opacity"
+                              />
                             </div>
                           )}
                         </div>
+                        
+                        {isAdminMode && (
+                          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={() => handleEditExperience(index)}
+                              className="p-2 text-gray-400 hover:text-blue-600 transition-colors rounded-lg hover:bg-blue-50"
+                              title="Edit Experience"
+                            >
+                              <Edit3 size={18} />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteExperience(index)}
+                              className="p-2 text-gray-400 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50"
+                              title="Delete Experience"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       {/* Meta Information */}
-                      <div className="flex flex-wrap gap-2 sm:gap-3 lg:gap-4 mb-3 sm:mb-4 text-xs sm:text-sm text-neutral-600">
-                        <div className="flex items-center gap-1">
-                          <Calendar size={12} className="sm:hidden" />
-                          <Calendar size={14} className="hidden sm:block lg:hidden" />
-                          <Calendar size={16} className="hidden lg:block" />
-                          <span className="text-xs sm:text-sm">{exp.duration}</span>
+                      <div className="flex flex-wrap gap-4 mb-6 text-sm text-gray-600 relative z-10">
+                        <div className="flex items-center gap-2">
+                          <Calendar size={16} className="text-gray-400" />
+                          <span>{exp.duration}</span>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <MapPin size={12} className="sm:hidden" />
-                          <MapPin size={14} className="hidden sm:block lg:hidden" />
-                          <MapPin size={16} className="hidden lg:block" />
-                          <span className="text-xs sm:text-sm">{exp.location}</span>
+                        <div className="flex items-center gap-2">
+                          <MapPin size={16} className="text-gray-400" />
+                          <span>{exp.location}</span>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Award size={12} className="sm:hidden" />
-                          <Award size={14} className="hidden sm:block lg:hidden" />
-                          <Award size={16} className="hidden lg:block" />
-                          <span className="text-xs sm:text-sm">{exp.period}</span>
+                        <div className="flex items-center gap-2">
+                          <Award size={16} className="text-gray-400" />
+                          <span>{exp.period}</span>
                         </div>
                       </div>
 
-                      {/* Highlight */}
+                      {/* Recognition Section */}
                       {exp.highlight && (
-                        <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg shadow-sm">
+                        <div className="mb-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded-r-lg relative z-10">
                           <div className="flex items-center gap-2 mb-2">
-                            <Award className="text-blue-600" size={16} />
-                            <span className="text-blue-700 font-semibold text-xs sm:text-sm">🏆 Recognition</span>
+                            <span className="text-lg">🏆</span>
+                            <span className="font-semibold text-blue-800">Recognition</span>
                           </div>
-                          <p className="text-sm sm:text-base font-medium text-blue-800">{exp.highlight}</p>
+                          <p className="text-blue-700">{exp.highlight}</p>
                         </div>
                       )}
 
-                      {/* Achievements - Enhanced Visibility */}
-                      <div className="mb-6 sm:mb-7 lg:mb-8">
-                        <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                          <Award className="text-blue-600" size={18} />
-                          <h5 className="font-bold text-neutral-900 text-base sm:text-lg">Key Achievements</h5>
+                      {/* Key Achievements Section */}
+                      <div className="mb-6 relative z-10">
+                        <div className="flex items-center gap-2 mb-4">
+                          <span className="text-lg">🎯</span>
+                          <h5 className="font-bold text-gray-900 text-lg">Key Achievements</h5>
                         </div>
-                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 sm:p-5 shadow-sm">
-                          <div className="relative">
-                            {/* Vertical Line */}
-                            <div className="absolute left-2 top-3 bottom-3 w-0.5 bg-gradient-to-b from-blue-500 to-indigo-500"></div>
-                            
-                            <ul className="space-y-3 sm:space-y-4">
-                              {exp.achievements.map((achievement, idx) => (
-                                <motion.li
-                                  key={idx}
-                                  className="relative flex items-start gap-4 text-neutral-800 text-sm sm:text-base leading-relaxed group"
-                                  initial={{ opacity: 0, x: -10 }}
-                                  whileInView={{ opacity: 1, x: 0 }}
-                                  transition={{ delay: idx * 0.1 }}
-                                >
-                                  {/* Dot */}
-                                  <motion.div 
-                                    className="relative z-10 w-4 h-4 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex-shrink-0 mt-0.5 shadow-sm"
-                                    whileHover={{ scale: 1.2 }}
-                                    transition={{ duration: 0.2 }}
-                                  >
-                                    <div className="w-2 h-2 bg-white rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
-                                  </motion.div>
-                                  <motion.span 
-                                    className="cursor-pointer"
-                                    whileHover={{ 
-                                      x: 12,
-                                      scale: 1.02,
-                                      color: "#2563eb",
-                                      transition: { duration: 0.2 }
-                                    }}
-                                  >
-                                    {achievement.split('**').map((part, partIdx) => 
-                                      partIdx % 2 === 1 ? (
-                                        <strong key={partIdx} className="font-bold text-blue-700">{part}</strong>
-                                      ) : (
-                                        <span key={partIdx} className="font-normal">{part}</span>
-                                      )
-                                    )}
-                                  </motion.span>
-                                </motion.li>
-                              ))}
-                            </ul>
-                          </div>
+                        
+                        <div className="space-y-3">
+                          {exp.achievements.map((achievement, idx) => (
+                            <div key={idx} className="flex items-start gap-3">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                              <p className="text-gray-700 leading-relaxed">
+                                {achievement.split('**').map((part, partIdx) => 
+                                  partIdx % 2 === 1 ? (
+                                    <strong key={partIdx} className="font-semibold text-blue-600">{part}</strong>
+                                  ) : (
+                                    <span key={partIdx}>{part}</span>
+                                  )
+                                )}
+                              </p>
+                            </div>
+                          ))}
                         </div>
                       </div>
 
-                      {/* Technologies */}
-                      <div>
-                        <h5 className="font-semibold text-neutral-900 mb-2 sm:mb-3 text-sm sm:text-base">Technologies:</h5>
-                        <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                      {/* Technologies Section */}
+                      <div className="relative z-10">
+                        <h5 className="font-semibold text-gray-900 mb-3">Technologies:</h5>
+                        <div className="flex flex-wrap gap-2">
                           {exp.technologies.map((tech) => (
                             <span
                               key={tech}
-                              className="px-2 py-1 bg-neutral-100 text-neutral-700 rounded-full text-xs font-medium hover:bg-primary-100 hover:text-primary-700 transition-colors"
+                              className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-blue-100 hover:text-blue-700 transition-colors"
                             >
                               {tech}
                             </span>
