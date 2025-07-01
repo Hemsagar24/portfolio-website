@@ -467,7 +467,7 @@ const Experience = ({ experienceData = [], onUpdateExperience, showNotification,
                       <div
                         className="w-[24rem] sm:w-[28rem] lg:w-[61rem] h-[36rem] sm:h-[42rem] lg:h-[54rem] bg-no-repeat bg-contain bg-center opacity-50"
                         style={{
-                          backgroundImage: `url('/pngwing.com.png')`,
+                          backgroundImage: `url('/walmart-logo.png')`,
                           transform: 'rotate(-90deg)',
                           maskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)',
                           WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)'
@@ -478,11 +478,11 @@ const Experience = ({ experienceData = [], onUpdateExperience, showNotification,
 
                   {/* Rakuten Logo Outside - Left Side (Absolutely positioned) */}
                   {exp.company?.toLowerCase().includes('rakuten') && (
-                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 z-0 pl-16 sm:pl-24 lg:pl-32">
+                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1/2 z-0 pl-16 sm:pl-24 lg:pl-36">
                       <div
-                        className="w-[24rem] sm:w-[28rem] lg:w-[95rem] h-[36rem] sm:h-[42rem] lg:h-[54rem] bg-no-repeat bg-contain bg-center opacity-50"
+                        className="w-[19rem] sm:w-[23rem] lg:w-[38rem] h-[27rem] sm:h-[33rem] lg:h-[42rem] bg-no-repeat bg-contain bg-center opacity-50"
                         style={{
-                          backgroundImage: `url('/toppng.com-rakuten-logo-in-vector-free-download-512x512.png')`,
+                          backgroundImage: `url('/rakuten-logo.png')`,
                           transform: 'rotate(-90deg)',
                           maskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)',
                           WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)'
@@ -497,7 +497,7 @@ const Experience = ({ experienceData = [], onUpdateExperience, showNotification,
                       <div
                         className="w-[24rem] sm:w-[28rem] lg:w-[35rem] h-[36rem] sm:h-[42rem] lg:h-[54rem] bg-no-repeat bg-contain bg-center opacity-50"
                         style={{
-                          backgroundImage: `url('/Ikyam-Logo-PNG-1.png')`,
+                          backgroundImage: `url('/ikyam-logo.png')`,
                           transform: 'rotate(-90deg)',
                           maskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)',
                           WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,0) 100%)'
@@ -537,29 +537,29 @@ const Experience = ({ experienceData = [], onUpdateExperience, showNotification,
                         {/* Company Logo */}
                         <div className="flex items-center">
                           {exp.company?.toLowerCase().includes('walmart') && (
-                            <div className="w-48 h-12 sm:w-64 sm:h-14 lg:w-80 lg:h-16 overflow-hidden rounded-lg flex items-center justify-center">
+                            <div className="w-32 h-8 sm:w-48 sm:h-12 md:w-56 md:h-14 lg:w-64 lg:h-16 overflow-hidden rounded-lg flex items-center justify-center">
                               <img 
-                                src="/pngwing.com.png" 
+                                src="/walmart-logo.png" 
                                 alt="Walmart Logo"
-                                className="w-[75%] h-[75%] object-cover opacity-80 hover:opacity-100 transition-opacity"
+                                className="w-[75%] h-[75%] object-contain opacity-80 hover:opacity-100 transition-opacity"
                               />
                             </div>
                           )}
                           {exp.company?.toLowerCase().includes('rakuten') && (
-                            <div className="w-48 h-12 sm:w-64 sm:h-14 lg:w-80 lg:h-16 overflow-hidden rounded-lg flex items-center justify-center">
+                            <div className="w-32 h-8 sm:w-48 sm:h-12 md:w-56 md:h-14 lg:w-64 lg:h-16 overflow-hidden rounded-lg flex items-center justify-center">
                               <img 
-                                src="/toppng.com-rakuten-logo-in-vector-free-download-512x512.png" 
+                                src="/rakuten-logo.png" 
                                 alt="Rakuten Logo"
-                                className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                                className="w-full h-full object-contain opacity-80 hover:opacity-100 transition-opacity"
                               />
                             </div>
                           )}
                           {exp.company?.toLowerCase().includes('ikyam') && (
-                            <div className="w-48 h-12 sm:w-64 sm:h-14 lg:w-80 lg:h-16 overflow-hidden rounded-lg flex items-center justify-center">
+                            <div className="w-28 h-10 sm:w-40 sm:h-14 md:w-44 md:h-16 lg:w-48 lg:h-18 overflow-hidden rounded-lg flex items-center justify-center">
                               <img 
-                                src="/Ikyam-Logo-PNG-1.png" 
+                                src="/ikyam-logo.png" 
                                 alt="Ikyam Logo"
-                                className="w-[75%] h-[75%] object-cover opacity-80 hover:opacity-100 transition-opacity"
+                                className="w-[75%] h-[75%] object-contain opacity-80 hover:opacity-100 transition-opacity"
                               />
                             </div>
                           )}
