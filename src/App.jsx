@@ -8,6 +8,10 @@ import Education from './components/Education'
 import Certifications from './components/Certifications'
 
 import { saveToLocalStorage, loadFromLocalStorage } from './utils/localStorage'
+import VisitorCounter from './components/VisitorCounter'
+import VisitorAnalytics from './components/VisitorAnalytics'
+import WelcomeNotification from './components/WelcomeNotification'
+import { VisitorProvider } from './context/VisitorContext'
 
 function App() {
   // Admin Authentication State
@@ -297,7 +301,8 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <VisitorProvider>
+      <div className="min-h-screen bg-gray-50">
       
 
       {/* Navigation */}
@@ -486,8 +491,22 @@ function App() {
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8 sm:py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-sm sm:text-base">© 2025 Hemsagar Patel. All rights reserved.</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-center sm:text-left">
+              <p className="text-sm sm:text-base">© 2025 Hemsagar Patel. All rights reserved.</p>
+            </div>
+            
+            {/* Visitor Counter */}
+            <VisitorCounter className="text-gray-400" />
+          </div>
+          
+          {/* Admin-only detailed stats */}
+          {isAdminMode && (
+            <div className="mt-6 pt-6 border-t border-gray-700">
+              <VisitorCounter showDetails={true} className="max-w-2xl mx-auto" />
+            </div>
+          )}
         </div>
       </footer>
 
@@ -726,7 +745,14 @@ function App() {
           </button>
         </div>
       )}
-    </div>
+
+      {/* Visitor Analytics Dashboard (Admin Only) */}
+      <VisitorAnalytics isAdminMode={isAdminMode} />
+
+      {/* Welcome Notification for New Visitors */}
+      <WelcomeNotification />
+      </div>
+    </VisitorProvider>
   )
 }
 
